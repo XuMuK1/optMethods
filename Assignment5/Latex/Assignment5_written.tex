@@ -1,0 +1,198 @@
+    \documentclass[a4paper,12pt,russian]{extreport}
+     
+    \usepackage{extsizes}
+    \usepackage{cmap} % для кодировки шрифтов в pdf
+    \usepackage[T2A]{fontenc}
+    \usepackage[utf8]{inputenx}
+   \usepackage{float}
+    \usepackage[english,main=russian]{babel}
+    
+    
+    \usepackage{pscyr}
+    \usepackage{algpseudocode}%algorithms description
+     
+    \usepackage{graphicx} % для вставки картинок
+    \usepackage{amssymb,amsfonts,amsmath,amsthm,amstext} % математические дополнения от АМС
+    \usepackage{dsfont} % математические дополнения от АМС
+    \usepackage{indentfirst} % отделять первую строку раздела абзацным отступом тоже
+    \usepackage[usenames,dvipsnames]{color} % названия цветов
+    \usepackage{makecell}
+    \usepackage{multirow} % улучшенное форматирование таблиц
+    %\usepackage{ulem} % подчеркивания(вместо обычного emph)
+     
+    \linespread{1} % полуторный интервал
+    %\renewcommand{\rmdefault}{ftm} % Times New Roman
+    \frenchspacing
+    
+    %Поля страницы
+    \usepackage{geometry}
+    \geometry{left=2cm}
+    \geometry{right=2cm}
+    \geometry{top=2cm}
+    \geometry{bottom=2cm}
+    
+    %Название списка литературы
+    \renewcommand\bibname{Литература}
+    %\pagestyle{fancy}
+    %\fancyhf{}
+    %\fancyhead[R]{\thepage}
+    %\fancyheadoffset{0mm}
+    %\fancyfootoffset{0mm}
+    %\setlength{\headheight}{17pt}
+    %\renewcommand{\headrulewidth}{0pt}
+    %\renewcommand{\footrulewidth}{0pt}
+    %\fancypagestyle{plain}{ 
+    %    \fancyhf{}
+    %    \rhead{\thepage}}
+    %\setcounter{page}{1} % начать нумерацию страниц с №5
+    
+    %О Рисунках и подписях
+    \usepackage[tableposition=top]{caption}
+    \usepackage{subcaption}
+    \DeclareCaptionLabelFormat{gostfigure}{Fig. #2}
+    \DeclareCaptionLabelFormat{gosttable}{Таблица #2}
+    \DeclareCaptionLabelSeparator{gost}{~---~}
+    \captionsetup{labelsep=gost}
+    \captionsetup[figure]{labelformat=gostfigure}
+    \captionsetup[table]{labelformat=gosttable}
+    \renewcommand{\thesubfigure}{\asbuk{subfigure}}
+    
+    %Заголовки
+    
+    \usepackage{etoolbox}
+	\makeatletter
+	\patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
+	\makeatother%to suppress newpages on chapters
+	
+    \usepackage{titlesec}
+ 
+\titleformat{\chapter}
+    {\Large\bfseries}
+    {\thechapter}
+    {8pt}{}   
+\titlespacing*{\chapter}{0pt}{5pt}{25pt}%left-before-after, topskip для того, чтобы не было пустоты сверху
+
+\titleformat{\section}
+    {\large\bfseries}
+    {\thesection}
+    {1em}{}
+\titlespacing*{\section}{0pt}{8pt}{20pt}
+ 
+\titleformat{\subsection}
+    {\normalsize\bfseries}
+    {\thesubsection}
+    {1em}{}
+
+
+\begin{document}
+\chapter*{ Assignment 5, Optimization methods (Maxim Kaledin)}
+
+\section*{Problem 3}
+
+Apply Sylvester's criterium to ensure that matrix is positive semidefinite. All principal minors should be non-negative, these are
+\begin{align*}
+-25y_1^2 \geq 0,\\
+(4y_1+2)(-25y_1^2) \geq 0,\\
+3y_2(4y_1+2) \geq 0,\\
+3y_2 \geq 0,\\
+4y_1+2 \geq 0.
+\end{align*}
+The first inequality gives $y_1=0$, and as result constraints are $D=\left\lbrace y: y_1=0,y_2 \geq 0\right\rbrace$ . Obviously, all feasible solutions are optimal and optimal goal is $0$.\\
+
+Derive the dual problem (after we dismiss redundant constraints):
+$$
+\max_{\lambda,\nu} \inf_{y \in D} \left[ 2y_1 + \nu y_1-\lambda y_2\right],\quad \text{s.t. } \lambda \geq 0.
+$$
+
+Since $y \in D$, $\inf_{y \in D} \left[ 2y_1 + \nu y_1-\lambda y_2\right]=\inf_{y_2 \in D} \left[-\lambda y_2\right]$ and
+$$
+\inf_{y_2 \in D} \left[-\lambda y_2\right] = \begin{cases}
+-\infty,\quad \lambda\geq 0,\\
+0, \quad \lambda=0.
+\end{cases}
+$$
+So $\lambda=0$ is the solution to dual problem with optimal goal equals $0$.
+
+\section* {Problem 4}
+
+\subsection*{1}
+
+The problem can be reformulated as
+\begin{align*}
+&\min_{x,t} t \quad s.t. \\
+&t \geq a_{i}^Tx + b_i \quad \forall i \in \left\lbrace 1,..,m \right\rbrace.
+\end{align*}
+
+Corresponding Lagrange dual problem is
+\begin{align*}
+&\max_{\lambda} \inf_{x,t} \left[t+ \sum_{i=1}^{m} \lambda_i(a_{i}^Tx + b_i - t)\right],\\
+& s.t. \quad \lambda \geq 0,
+\end{align*}
+where $\lambda_i \geq 0$ are dual variables.
+
+\subsection*{2}
+
+Let 
+$$
+\hat{f}_2(y)=\frac{1}{\alpha}\log{\left( \sum_{i=1}^m \exp{\alpha y_i}\right)},
+$$
+and $y_i=a_i^Tx+b_i$ be new constraints. First, formulate the primal problem:
+
+\begin{align*}
+& \min_{x,y} \hat{f}_2(y)\\
+&s.t. \quad y_i=a_i^Tx+b_i \quad \forall i \in \left\lbrace 1,..,m \right\rbrace.
+\end{align*}
+
+The dual one is defined as
+
+$$
+\max_{\lambda} \inf_{x,t} \left[t+ \sum_{i=1}^{m} \lambda_i(a_{i}^Tx + b_i - t)\right]
+$$
+without constraints on $\lambda$ because the constraints are equalities.
+
+\section* {Problem 5}
+
+Define Lagrange function of a problem $L(x,\lambda)=\Vert Ax-b\Vert_2^2+\sum_{i=1}^m\lambda_i(c_{i\cdot}x-d_i)$. Since there are no inequality constraints, KKT conditions are exactly
+\begin{align*}
+&\frac{\partial L}{\partial x} =0\\
+&\frac{\partial L}{\partial \lambda} =0,
+\end{align*}
+where derivatives denote the gradients truncated to needed set of variables. These sets of constraints are exactly
+\begin{align*}
+&\frac{\partial L}{\partial x_j} = 2\sum_{i=1}^m a_{ij}\sum_{k=1}^n(a_{ik}x_k - b_i)+ \sum_{i=1}^p\lambda_i c_{ij}, \\
+&Cx=d.
+\end{align*}
+Let us write the first expression shorter:
+$$
+\nabla_{x}L = 2A^T(Ax-b) +  C^T\lambda.
+$$
+Since the goal function is convex, solution to system
+$$
+\begin{cases}
+&2A^T(Ax-b)+C^T\lambda=0,\\
+&Cx=d
+\end{cases}
+$$
+exists and is an optimal solution of primal problem. With pseudo-inverse (it exists since $C$ has full row rank):
+\begin{align*}
+& x=(C^TC)^{-1}C^Td,\\
+& \lambda: \quad C^T\lambda = -2A^T(Ax-b).
+\end{align*}
+
+Now derive the dual problem:
+
+$$
+\max_{\lambda} \inf_{x} L(x,\lambda).
+$$
+
+Lagrangian $L$ remains convex for all $\lambda$, so the solution to inner problem is given by the system of normal equations
+
+$$
+2A^T(Ax-b)+C^T\lambda=0
+$$
+and can be found based on any $\lambda$ since matrix $A^TA$ has full rank. We could write the solution explicitly:
+$$
+x=(A^TA)^{-1}\left(-\frac{1}{2}C^T\lambda+A^Tb\right).
+$$
+\end{document}
+
