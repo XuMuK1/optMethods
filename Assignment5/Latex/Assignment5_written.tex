@@ -150,6 +150,18 @@ $$
 $$
 without constraints on $\lambda$ because the constraints are equalities.
 
+\subsection*{3}
+
+Let us show the right side of inequality, in order to do that we can exploit monotonicity of exponent:
+
+\begin{align*}
+&\frac{1}{\alpha}\log\sum_{i=1}^m\exp\left(\alpha(a_{i}^Tx+b_i)\right)-\max_{i} (a_{i}^Tx+b_i) \leq \\
+&\leq \frac{1}{\alpha}\log\left( m\exp\left(\alpha \max_{i}(a_i^Tx+b_i) \right )\right)-\max_{i} (a_{i}^Tx+b_i)=\\
+&= \frac{\log(m)}{\alpha}.
+\end{align*}
+
+
+
 \section* {Problem 5}
 
 Define Lagrange function of a problem $L(x,\lambda)=\Vert Ax-b\Vert_2^2+\sum_{i=1}^m\lambda_i(c_{i\cdot}x-d_i)$. Since there are no inequality constraints, KKT conditions are exactly
@@ -194,5 +206,52 @@ and can be found based on any $\lambda$ since matrix $A^TA$ has full rank. We co
 $$
 x=(A^TA)^{-1}\left(-\frac{1}{2}C^T\lambda+A^Tb\right).
 $$
+
+\section*{Problem 6}
+
+\subsection*{(1)}
+Consider problem (4) firstly:
+
+\begin{align*}
+&\min_x c^Tx\\
+&s.t.\quad Ax=b, ~x \geq 0.
+\end{align*}
+
+Its dual problem is 
+
+\begin{align*}
+&\max_{\lambda,\mu} \inf_x \left( c^Tx +\sum_{i=1}^m \lambda_i(a_{i\cdot}x-b_i) - \sum_{j=1}^n\mu_jx_j \right),\\
+&s.t. \quad \mu\geq 0,
+\end{align*}
+and KKT-conditions are
+\begin{itemize}
+\item $c+A^T\lambda-\mu =0$ (stationarity, $\nabla_x L(x,\lambda,\mu)=0$),
+\item feasibility conditions (as in problem statement),
+\item $Ax=b$ (from $\nabla_\lambda L(x,\lambda,\mu)=0 $),
+\item $\mu_jx_j=0 \quad \forall j$ (complementary slackness).
+\end{itemize}
+
+\subsection*{(2)}
+
+The idea is the same. Consider problem (5):
+
+\begin{align*}
+&\min_x c^Tx - \tau\sum_{i=1}^n \log(x_i)\\
+&s.t.\quad Ax=b.
+\end{align*}
+
+Its dual problem is (let $(1/x)$ denotes coordinate-wise division)
+
+\begin{align*}
+\max_{\lambda} \inf_x \left( c^Tx -\tau\sum_{i=1}^n \log(x_i) +\sum_{i=1}^m \lambda_i(a_{i\cdot}x-b_i) \right).
+\end{align*}
+and KKT-conditions are
+\begin{itemize}
+\item $c-\tau(1/x)+A^T\lambda =0$ (stationarity, $\nabla_x L(x,\lambda,\mu)=0$),
+\item feasibility conditions (as in problem statement),
+\item $Ax=b$ (from $\nabla_\lambda L(x,\lambda,\mu)=0 $).
+\end{itemize}
+
+Note that the goal is well-defined only for non-negative $x$, otherwise the result is a complex number.
 \end{document}
 
