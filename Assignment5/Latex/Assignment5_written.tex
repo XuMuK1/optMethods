@@ -99,19 +99,66 @@ Apply Sylvester's criterium to ensure that matrix is positive semidefinite. All 
 \end{align*}
 The first inequality gives $y_1=0$, and as result constraints are $D=\left\lbrace y: y_1=0,y_2 \geq 0\right\rbrace$ . Obviously, all feasible solutions are optimal and optimal goal is $0$.\\
 
-Derive the dual problem (after we dismiss redundant constraints):
+Let $F_1,F_2,G$ are such symmetric matrices that the initial matrix $A=y_1F_1+y_2F_2+G$:
 $$
-\max_{\lambda,\nu} \inf_{y \in D} \left[ 2y_1 + \nu y_1-\lambda y_2\right],\quad \text{s.t. } \lambda \geq 0.
+F_1 =
+\begin{bmatrix}
+0 & 5 & 0\\
+5 & 0 & 0\\
+0 & 0 & 4
+\end{bmatrix}, 
+F_2 =
+\begin{bmatrix}
+0 & 0 & 0\\
+0 & 3 & 0\\
+0 & 0 & 0
+\end{bmatrix}, 
+G =
+\begin{bmatrix}
+0 & 0 & 0\\
+0 & 0 & 0\\
+0 & 0 & 2
+\end{bmatrix}.
 $$
 
-Since $y \in D$, $\inf_{y \in D} \left[ 2y_1 + \nu y_1-\lambda y_2\right]=\inf_{y_2 \in D} \left[-\lambda y_2\right]$ and
-$$
-\inf_{y_2 \in D} \left[-\lambda y_2\right] = \begin{cases}
--\infty,\quad \lambda\geq 0,\\
-0, \quad \lambda=0.
-\end{cases}
-$$
-So $\lambda=0$ is the solution to dual problem with optimal goal equals $0$.
+Then we can write down the dual problem in the following way (denoting $Z\succeq 0$ as symmetric matrix of dual variables and scalar product as $(A,B)=\text{tr}(A^TB)$):
+
+\begin{align*}
+\max_{Z \succeq 0} - (Z,G), \quad s.t. \\
+(Z,F_1)=2,
+(Z,F_2)=0.
+\end{align*}
+
+Rewrite it in the coordinate form:
+
+\begin{align*}
+&\max_{Z \succeq 0} - 2z_{33}, \quad s.t. \\
+&10z_{12}+4z_{33}=2,
+&z_{22}=0.
+\end{align*}
+
+Now add Sylvester's criterium inequalities
+
+\begin{align*}
+&z_{11} \geq 0, ~ z_{22}\geq 0, ~ z_33 \geq 0,\\
+&z_{11}z_{22}-z_{12}^2 \geq 0,\\
+&z_{11}z_{33}-z_{13}^2 \geq 0,\\
+&z_{22}z_{33} - z_{23}^2 \geq 0\\
+&det(Z) \geq 0.
+\end{align*}
+
+This conditions can be significantly simplified if we add constraints from the dual problem. Finally, we obtain
+
+\begin{align*}
+&\max_{Z} - 2z_{33}, \quad s.t. \\
+&10z_{12}+4z_{33}=2,\\
+&z_{22}=0, z_{12}=0, z_{23}=0\\
+&z_1 \geq 0, z_{33} \geq 0,\\
+&z_{11}z_{33}-z_{13}^2 \geq 0.
+\end{align*}
+
+Since $z_{12}=0$ the entry $z_{33}=1/2$ and we can somehow assign other variables to satisfy feasibility. Thus the optimal dual goal is $-1$ which is not equal to optimal primal goal $0$.
+
 
 \section* {Problem 4}
 
@@ -128,7 +175,21 @@ Corresponding Lagrange dual problem is
 &\max_{\lambda} \inf_{x,t} \left[t+ \sum_{i=1}^{m} \lambda_i(a_{i}^Tx + b_i - t)\right],\\
 & s.t. \quad \lambda \geq 0,
 \end{align*}
-where $\lambda_i \geq 0$ are dual variables.
+where $\lambda_i \geq 0$ are dual variables. We can easily simplify this because it is a linear program:
+
+\begin{align*}
+&\quad \max_{\lambda} b^T\lambda,\quad s.t.\\
+&\quad 
+\begin{bmatrix}
+A\\
+-1...-1
+\end{bmatrix}\lambda = 
+\begin{bmatrix}
+0\\
+\vdots\\
+0\\
+-1\end{bmatrix}
+\end{align*}
 
 \subsection*{2}
 
@@ -145,10 +206,11 @@ and $y_i=a_i^Tx+b_i$ be new constraints. First, formulate the primal problem:
 
 The dual one is defined as
 
-$$
-\max_{\lambda} \inf_{x,t} \left[t+ \sum_{i=1}^{m} \lambda_i(a_{i}^Tx + b_i - t)\right]
-$$
-without constraints on $\lambda$ because the constraints are equalities.
+\begin{align*}
+&\max_{\lambda} \inf_{x,y} \left[\frac{1}{\alpha}\log{\left( \sum_{i=1}^m \exp{\alpha y_i}\right)} + \sum_{i=1}^{m} \lambda_i(a_{i}^Tx + b_i - y_i)\right]=\\
+&=\inf_{y} \left[\frac{1}{\alpha}\log{\left( \sum_{i=1}^m \exp{\alpha y_i}\right)}-\sum_{i=1}^m\lambda_iy_i\right]+\inf_{x,y}\left[ \sum_{i=1}^{m} \lambda_i(a_{i}^Tx + b_i)\right].
+\end{align*}
+
 
 \subsection*{3}
 
@@ -221,9 +283,14 @@ Its dual problem is
 
 \begin{align*}
 &\max_{\lambda,\mu} \inf_x \left( c^Tx +\sum_{i=1}^m \lambda_i(a_{i\cdot}x-b_i) - \sum_{j=1}^n\mu_jx_j \right),\\
-&s.t. \quad \mu\geq 0,
+&s.t. \quad \mu\geq 0.
 \end{align*}
-and KKT-conditions are
+It can be simplified to
+\begin{align*}
+&\max_{\lambda} b^T\lambda,\\
+&s.t.~ A^Ty \leq c.
+\end{align*}
+KKT-conditions for primal problem are
 \begin{itemize}
 \item $c+A^T\lambda-\mu =0$ (stationarity, $\nabla_x L(x,\lambda,\mu)=0$),
 \item feasibility conditions (as in problem statement),
@@ -252,6 +319,40 @@ and KKT-conditions are
 \item $Ax=b$ (from $\nabla_\lambda L(x,\lambda,\mu)=0 $).
 \end{itemize}
 
-Note that the goal is well-defined only for non-negative $x$, otherwise the result is a complex number.
+Since the Hessian matrix of inf sub-problem is positive definite (it is even diagonal), infimum is achieved when neccessary conditions are satisfied (i.e. stationarity):
+
+$$
+(1/x)=\frac{1}{\tau}(c+A^T\lambda)=y(\lambda).
+$$
+
+So, simplified dual is
+
+\begin{align*}
+\max_{\lambda}  \left( c^T(1/y(\lambda)) +\tau\sum_{i=1}^n \log(y(\lambda)_i) +\sum_{i=1}^m \lambda_i(a_{i\cdot}(1/y(\lambda))-b_i) \right).
+\end{align*}
+
+After some manipulation we can obtain 
+
+$$
+x_i=\frac{\tau}{c_i+(a_{\cdot i})^T\lambda}
+$$
+
+and simplify the dual even more
+
+\begin{align*}
+\max_{\lambda}  \left( \tau\sum_{i=1}^n\frac{c_i}{c_i+(a_{\cdot i})^T\lambda} - n\tau\log\tau+\tau\sum_{i=1}^n \log(c_i+a_i^T\lambda) +\sum_{i=1}^m \lambda_i(a_{i\cdot}(1/y(\lambda))-b_i) \right).
+\end{align*}
+
+Consider closely the sum
+\begin{align*}
+&\sum_{i=1}^m \lambda_ia_{i\cdot}(1/y(\lambda))=\sum_{i=1}^m \lambda_i \sum_{j=1}^n \frac{a_{ij}\tau}{c_j+(a_{\cdot j})^T\lambda}=\\
+&= \sum_{j=1}^n \sum_{i=1}^m \frac{\lambda_ia_{ij}\tau}{c_j+(a_{\cdot j})^T\lambda}=\sum_{j=1}^n \frac{(a_{\cdot j})^T\lambda \tau}{c_j+(a_{\cdot j})^T\lambda}.
+\end{align*}
+
+It cancels with the first sum and results in $m\tau$. Finally, the dual problem is
+\begin{align*}
+\max_{\lambda}  \left( \tau\sum_{j=1}^n \log(c_j+(a_{\cdot j})^T\lambda) - b^T\lambda \right).
+\end{align*}
+
 \end{document}
 
